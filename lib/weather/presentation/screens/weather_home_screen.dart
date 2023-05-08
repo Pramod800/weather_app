@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/weather/presentation/bloc/cubit/weather_cubit.dart';
 
 class WeatherHomeScreen extends StatefulWidget {
   const WeatherHomeScreen({super.key});
@@ -9,35 +11,39 @@ class WeatherHomeScreen extends StatefulWidget {
 
 class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
   @override
+  void initState() {
+    // context.read<WeatherCubit>().getWeatherDetails(city: widget.city);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              SizedBox(height: 5),
+            children: [
+              const SizedBox(height: 10),
               Padding(
-                padding: EdgeInsets.only(left: 22),
-                child: Text(
-                  '☁ Weather App ',
-                  style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green),
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              SizedBox(height: 5),
-              HeaderWidget(),
-              SizedBox(height: 20),
-              CityInfoWidget(),
-              SizedBox(height: 20),
-              WeatherForecastList(),
-              SizedBox(height: 15),
-              WindWidget(),
-              SizedBox(height: 15),
-              BarometerWidget(),
+                  padding: const EdgeInsets.only(left: 22),
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    height: 65,
+                    width: 220,
+                    scale: 1.3,
+                    fit: BoxFit.cover,
+                  )),
+              const SizedBox(height: 5),
+              const HeaderWidget(),
+              const SizedBox(height: 20),
+              const CityInfoWidget(),
+              const SizedBox(height: 20),
+              const WeatherForecastList(),
+              const SizedBox(height: 10),
+              const WindWidget(),
+              const SizedBox(height: 10),
+              const BarometerWidget(),
             ],
           ),
         ),
@@ -51,13 +57,17 @@ class HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _searchController = TextEditingController();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       child: Row(
         children: [
           Expanded(
-            child: TextField(
-              // onSubmitted: (){},
+            child: TextFormField(
+              controller: _searchController,
+              onFieldSubmitted: (userInput) {
+                context.read<WeatherCubit>().getWeatherDetails(city: userInput);
+              },
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
@@ -102,10 +112,10 @@ class CityInfoWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.network(
-          'https://w7.pngwing.com/pngs/487/562/png-transparent-sun-logo-sunlight-silhouette-thumbnail.png',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEwR73lnZrAZJ1L6DcFLICg-I9HcNHzrG0dp9IZfE&s',
           scale: 1.2,
-          height: 100,
-          width: 100,
+          height: 80,
+          width: 80,
         ),
         const SizedBox(height: 15),
         Row(
@@ -124,7 +134,7 @@ class CityInfoWidget extends StatelessWidget {
           children: const [
             Text('32°C',
                 style: TextStyle(
-                    fontSize: 50,
+                    fontSize: 42,
                     fontWeight: FontWeight.w500,
                     color: Colors.green)),
             SizedBox(width: 10),
