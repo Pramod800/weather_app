@@ -25,13 +25,13 @@ class _SearchedScreenState extends State<SearchedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child:
-            BlocBuilder<WeatherCubit, WeatherState>(builder: (context, state) {
-          state.maybeWhen(
-            orElse: () {},
+      body: BlocBuilder<WeatherCubit, WeatherState>(
+        builder: (context, state) {
+          return state.maybeWhen(
+            orElse: () {
+              return const CircularProgressIndicator();
+            },
             fetched: (weatherModel) {
-              print(weatherModel.main!.temp.toString());
               return Column(
                 children: [
                   Image.network(
@@ -43,9 +43,9 @@ class _SearchedScreenState extends State<SearchedScreen> {
                   const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text('Kathmandu',
-                          style: TextStyle(
+                    children: [
+                      Text(widget.searchTerm.toString(),
+                          style: const TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.w400,
                               color: Colors.lightBlue)),
@@ -71,59 +71,8 @@ class _SearchedScreenState extends State<SearchedScreen> {
                 ],
               );
             },
-            error: (error) => 'error fetchind data$error',
           );
-          // state.when(
-          //     initial: () => const FlutterLogo(),
-          //     loading: () {
-          //       return const CircularProgressIndicator();
-          //     },
-          //     fetched: (weatherModel) {
-          //       print(weatherModel.wind!.speed.toString());
-          //       return Column(
-          //         children: [
-          //           Image.network(
-          //             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEwR73lnZrAZJ1L6DcFLICg-I9HcNHzrG0dp9IZfE&s',
-          //             scale: 1.2,
-          //             height: 80,
-          //             width: 80,
-          //           ),
-          //           const SizedBox(height: 15),
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.center,
-          //             children: [
-          //               Text(widget.searchTerm.toString(),
-          //                   style: const TextStyle(
-          //                       fontSize: 30,
-          //                       fontWeight: FontWeight.w400,
-          //                       color: Colors.lightBlue)),
-          //             ],
-          //           ),
-          //           Row(
-          //             crossAxisAlignment: CrossAxisAlignment.center,
-          //             mainAxisAlignment: MainAxisAlignment.center,
-          //             children: [
-          //               Text(weatherModel.main!.temp.toString(),
-          //                   style: const TextStyle(
-          //                       fontSize: 42,
-          //                       fontWeight: FontWeight.w500,
-          //                       color: Colors.green)),
-          //               const SizedBox(width: 10),
-          //               const Text('Feels Like 30°C',
-          //                   style: TextStyle(
-          //                       fontSize: 20,
-          //                       fontWeight: FontWeight.w400,
-          //                       color: Colors.grey)),
-          //             ],
-          //           )
-          //         ],
-          //       );
-          //     },
-          //     error: (erroe) => const Text('error is occured'));
-          return Container(
-            child: Text(widget.searchTerm),
-          );
-        }),
+        },
       ),
     );
   }
