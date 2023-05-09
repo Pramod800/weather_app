@@ -22,7 +22,6 @@ class BaseRemoteSource {
   }) async {
     try {
       final response = await request(dioClient);
-      // Response<Map<String, dynamic>>
       if (response.statusCode! == 200) {
         return await onResponse(response.data!);
       } else {

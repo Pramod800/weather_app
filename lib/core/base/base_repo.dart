@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dartz/dartz.dart';
 
-
 class BaseRepository {
   BaseRepository();
 
@@ -17,6 +16,7 @@ class BaseRepository {
   }) async {
     try {
       final data = await call;
+      // print('base repo' + data.toString());
       return right(await onSuccess(data));
     } on String catch (e) {
       return left(e);

@@ -9,10 +9,12 @@ class WeatherRepo extends BaseRepository {
   late final WeatherApi _weatherApi;
 
   Future<Either<String?, WeatherModel>> getWeatherDetails(
-      {required String city}) async {
+      {required String city}) 
+      {
     return handleNetworkCall(
       call: _weatherApi.getWeather(city: city),
       onSuccess: (data) => data,
+      
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/weather/presentation/bloc/cubit/weather_cubit.dart';
+import 'package:weather_app/weather/presentation/screens/searched_screen.dart';
 
 class WeatherHomeScreen extends StatefulWidget {
   const WeatherHomeScreen({super.key});
@@ -12,7 +13,7 @@ class WeatherHomeScreen extends StatefulWidget {
 class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
   @override
   void initState() {
-    // context.read<WeatherCubit>().getWeatherDetails(city: widget.city);
+    // context.read<WeatherCubit>()
     super.initState();
   }
 
@@ -65,8 +66,19 @@ class HeaderWidget extends StatelessWidget {
           Expanded(
             child: TextFormField(
               controller: _searchController,
-              onFieldSubmitted: (userInput) {
-                context.read<WeatherCubit>().getWeatherDetails(city: userInput);
+              onFieldSubmitted: (value) {
+                // print(value.toString());
+                // context.read<WeatherCubit>().getWeatherDetails(city: value);
+
+                if (value.isNotEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SearchedScreen(
+                              searchTerm: value,
+                            )),
+                  );
+                }
               },
               decoration: InputDecoration(
                 filled: true,

@@ -11,7 +11,7 @@ mixin BaseBlocMixin {
         return right(onData(data));
       });
     } on String catch (e) {
-      return left(onFailure(e));
+      return left(onFailure('failure from base cubit' + e.toString()));
     }
   }
 }
