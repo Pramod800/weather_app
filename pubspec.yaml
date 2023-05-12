@@ -43,6 +43,9 @@ dependencies:
   geolocator: ^9.0.2
   equatable: ^2.0.5
   bloc: ^8.1.1
+  flutter_spinkit: ^5.2.0
+  injectable: ^2.1.1
+  injectable_generator: ^2.1.5
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +75,8 @@ flutter:
   assets:
     - assets/images/weather.png
     - assets/images/logo.png
+    - assets/images/splash.jpg
+    - assets/images/
 
   #   - images/a_dot_ham.jpeg
 

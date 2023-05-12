@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/weather/domain/location_service.dart';
 import 'package:weather_app/weather/presentation/bloc/cubit/weather_cubit.dart';
 import 'package:weather_app/weather/presentation/screens/searched_screen.dart';
+import 'package:weather_app/weather/presentation/screens/splash_screen.dart';
 
 class WeatherHomeScreen extends StatefulWidget {
   const WeatherHomeScreen({super.key});
@@ -13,39 +15,48 @@ class WeatherHomeScreen extends StatefulWidget {
 class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
   @override
   void initState() {
-    // context.read<WeatherCubit>()
+    // LocationService.determinePosition().runtimeType;
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              Padding(
-                  padding: const EdgeInsets.only(left: 22),
-                  child: Image.asset(
-                    'assets/images/logo.png',
-                    height: 65,
-                    width: 220,
-                    scale: 1.3,
-                    fit: BoxFit.cover,
-                  )),
-              const SizedBox(height: 5),
-              const HeaderWidget(),
-              const SizedBox(height: 20),
-              const CityInfoWidget(),
-              const SizedBox(height: 20),
-              const WeatherForecastList(),
-              const SizedBox(height: 10),
-              const WindWidget(),
-              const SizedBox(height: 10),
-              const BarometerWidget(),
-            ],
+    return Container(
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Colors.blue, Colors.red])),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                Padding(
+                    padding: const EdgeInsets.only(left: 22),
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      height: 65,
+                      width: 220,
+                      scale: 1.3,
+                      fit: BoxFit.cover,
+                    )),
+                const SizedBox(height: 5),
+                const HeaderWidget(),
+                const SizedBox(height: 20),
+                const CityInfoWidget(),
+                const SizedBox(height: 20),
+                const WeatherForecastList(),
+                const SizedBox(height: 10),
+                const WindWidget(),
+                const SizedBox(height: 10),
+                const BarometerWidget(),
+              ],
+            ),
           ),
         ),
       ),
@@ -105,7 +116,12 @@ class HeaderWidget extends StatelessWidget {
             child: IconButton(
               padding: const EdgeInsets.all(12),
               iconSize: 26,
-              onPressed: () {},
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => const SplashScreen()),
+                // );
+              },
               icon: const Icon(Icons.location_on_outlined, color: Colors.green),
             ),
           ),
@@ -137,7 +153,7 @@ class CityInfoWidget extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w400,
-                    color: Colors.lightBlue)),
+                    color: Colors.orange)),
           ],
         ),
         Row(
@@ -178,10 +194,12 @@ class WeatherForecastList extends StatelessWidget {
             margin: index == 0 ? const EdgeInsets.only(left: 20) : null,
             // margin: const EdgeInsets.only(left: 15),
             child: Card(
-              // color: Colors.white60,
+              color: Colors.white70,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     Text(
                       '7 March',
