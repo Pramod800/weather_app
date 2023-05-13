@@ -16,9 +16,10 @@ class BaseRepository {
   }) async {
     try {
       final data = await call;
-      // print('base repo' + data.toString());
+      // print('error in repo');
       return right(await onSuccess(data));
     } on String catch (e) {
+      print('erorrrrrrrrrrrrrrrrrr');
       return left(e);
     }
   }

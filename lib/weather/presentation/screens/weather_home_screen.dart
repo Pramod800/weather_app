@@ -1,10 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_app/weather/domain/location_service.dart';
-import 'package:weather_app/weather/presentation/bloc/cubit/weather_cubit.dart';
-import 'package:weather_app/weather/presentation/screens/searched_screen.dart';
-import 'package:weather_app/weather/presentation/screens/splash_screen.dart';
+import 'package:weather_app/core/constants/constants.dart';
+import 'package:weather_app/router/router.gr.dart';
 
+@RoutePage()
 class WeatherHomeScreen extends StatefulWidget {
   const WeatherHomeScreen({super.key});
 
@@ -15,47 +14,49 @@ class WeatherHomeScreen extends StatefulWidget {
 class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
   @override
   void initState() {
-    // LocationService.determinePosition().runtimeType;
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.blue, Colors.red])),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                Padding(
-                    padding: const EdgeInsets.only(left: 22),
-                    child: Image.asset(
-                      'assets/images/logo.png',
-                      height: 65,
-                      width: 220,
-                      scale: 1.3,
-                      fit: BoxFit.cover,
-                    )),
-                const SizedBox(height: 5),
-                const HeaderWidget(),
-                const SizedBox(height: 20),
-                const CityInfoWidget(),
-                const SizedBox(height: 20),
-                const WeatherForecastList(),
-                const SizedBox(height: 10),
-                const WindWidget(),
-                const SizedBox(height: 10),
-                const BarometerWidget(),
-              ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [ColorConstants.firstGradientColor, Colors.red])),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                   SizedBox(height: 10),
+                  // Padding(
+                  //   padding:  EdgeInsets.only(left: 22),
+                  //   child: Image.asset(
+                  //     'assets/images/bannerr.png',
+                  //     height: 65,
+                  //     width: 220,
+                  //     scale: 1.3,
+                  //     fit: BoxFit.cover,
+                  //   ),
+                  // ),
+                   SizedBox(height: 5),
+                   HeaderWidget(),
+                   SizedBox(height: 20),
+                   CityInfoWidget(),
+                   SizedBox(height: 20),
+                   WeatherForecastList(),
+                   SizedBox(height: 10),
+                   WindWidget(),
+                   SizedBox(height: 10),
+                   BarometerWidget(),
+                ],
+              ),
             ),
           ),
         ),
@@ -78,17 +79,8 @@ class HeaderWidget extends StatelessWidget {
             child: TextFormField(
               controller: _searchController,
               onFieldSubmitted: (value) {
-                // print(value.toString());
-                // context.read<WeatherCubit>().getWeatherDetails(city: value);
-
                 if (value.isNotEmpty) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SearchedScreen(
-                              searchTerm: value,
-                            )),
-                  );
+                  context.router.push(SearchedRoute(searchTerm: value));
                 }
               },
               decoration: InputDecoration(

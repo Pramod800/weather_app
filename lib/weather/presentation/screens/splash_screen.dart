@@ -1,6 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_app/core/constants/constants.dart';
+import 'package:weather_app/router/router.gr.dart';
 import 'package:weather_app/weather/presentation/screens/weather_home_screen.dart';
 
+@RoutePage()
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -12,10 +16,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const WeatherHomeScreen()),
-      );
+      context.router.push(const WeatherHomeRoute());
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const WeatherHomeScreen()),
+      // );
     });
     super.initState();
   }
@@ -23,11 +28,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Colors.purple, Colors.red])),
+              colors: [ColorConstants.firstGradientColor, Colors.red])),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         // floatingActionButton: FloatingActionButton(onPressed: () {}),

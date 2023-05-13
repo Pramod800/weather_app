@@ -1,17 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/core/di/bootstrap.dart';
+import 'package:weather_app/router/router.dart';
 import 'package:weather_app/weather/data/movie_data_source/weather_data_source.dart';
 import 'package:weather_app/weather/data/repository/weather_repo_impl.dart';
 import 'package:weather_app/weather/presentation/bloc/cubit/weather_cubit.dart';
-import 'package:weather_app/weather/presentation/screens/splash_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  // configureDependencies();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +25,19 @@ class MyApp extends StatelessWidget {
           create: (context) => WeatherCubit(WeatherRepoImpl(WeatherApi(Dio()))),
         ),
         // BlocProvider(
-        //   create: (context) => WeatherForecastCubit(WeatherRepoImpl(WeatherApi(Dio()))),
+        //   create: (context) =>
+        //       WeatherForecastCubit(WeatherRepoImpl(WeatherApi(Dio()))),
         // ),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
+        routerConfig: _appRouter.config(),
+
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const SplashScreen(),
+        // home: const SplashScreen(),
       ),
     );
   }

@@ -20,10 +20,4 @@ class WeatherApi extends BaseRemoteSource {
   //   return networkHandler(request: (data)=>response.data, onResponse: (Dio dio)=>_dioClient.get(''))
   // }
 
-  // Future<WeatherForecastModel> forecastWeather({required String place}) async {
-  //   return networkHandler(
-  //       onResponse: (data) => WeatherForecastModel.fromJson(data),
-  //       request: (Dio dio) => _dioClient.get(
-  //           'https://api.weatherapi.com/v1/forecast.json?key=66eb35a4c0134ef3a23153944222403&q=$place&days=1&aqi=yes&alerts=no'));
-  // }
 }
