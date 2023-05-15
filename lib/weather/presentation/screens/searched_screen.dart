@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:line_icons/line_icons.dart';
+import 'package:weather_app/core/constants/constants.dart';
 import 'package:weather_app/weather/presentation/bloc/cubit/weather_cubit.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -25,16 +27,20 @@ class _SearchedScreenState extends State<SearchedScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Colors.blue, Colors.red])),
+              colors: [ColorConstants.firstGradientColor, Colors.red])),
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          // title: Text(widget.searchTerm.toUpperCase()),
+          backgroundColor: Colors.transparent,
+        ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -56,9 +62,7 @@ class _SearchedScreenState extends State<SearchedScreen> {
                               children: [
                                 Text(widget.searchTerm.toUpperCase(),
                                     style: const TextStyle(
-                                        fontSize: 35,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black)),
+                                        fontSize: 35, color: Colors.orange)),
                               ],
                             ),
                             // const SizedBox(height: 15),
@@ -70,15 +74,19 @@ class _SearchedScreenState extends State<SearchedScreen> {
                                 return Column(
                                   children: [
                                     Image.network(
-                                      "http://openweathermap.org/img/w/${data.icon}.png"
-                                          .toString(),
+                                        "http://openweathermap.org/img/w/${data.icon}.png"
+                                            .toString(),
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.fill
 
-                                      // height: 150,
-                                      // width: 150,
-
-                                      // scale: 0.3,
+                                        // scale: 0.5,
+                                        ),
+                                    Text(
+                                      data.description.toString(),
+                                      style: const TextStyle(
+                                          fontSize: 20, color: Colors.black),
                                     ),
-                                    Text(data.description.toString()),
                                   ],
                                 );
                               },
@@ -94,7 +102,7 @@ class _SearchedScreenState extends State<SearchedScreen> {
                                         color: Colors.green)),
                                 const SizedBox(width: 10),
                                 Text(
-                                  "Max Temp ${weatherModel.main!.feelsLike.toString()}",
+                                  "Max Temp ${weatherModel.main!.grndLevel.toString()}",
                                   style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w400,
@@ -102,6 +110,8 @@ class _SearchedScreenState extends State<SearchedScreen> {
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 15),
+
                             const Padding(
                               padding: EdgeInsets.only(left: 10),
                               child: Text('Wind',
@@ -109,7 +119,7 @@ class _SearchedScreenState extends State<SearchedScreen> {
                                   style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.lightBlue)),
+                                      color: Colors.blue)),
                             ),
                             Card(
                               color: Colors.white70,
@@ -127,19 +137,20 @@ class _SearchedScreenState extends State<SearchedScreen> {
                                         color: Colors.blue,
                                       ),
                                       title: Text(
-                                          '${weatherModel.wind!.speed}  Speed Km/h'),
+                                          '${weatherModel.wind!.speed} Speed Km/h'),
                                     )
                                   ],
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 15),
                             const Padding(
                               padding: EdgeInsets.only(left: 10),
                               child: Text('Barometer',
                                   style: TextStyle(
                                       fontSize: 25,
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.lightBlue)),
+                                      color: Colors.blue)),
                             ),
                             Card(
                               color: Colors.white70,
@@ -153,7 +164,7 @@ class _SearchedScreenState extends State<SearchedScreen> {
                                   children: [
                                     ListTile(
                                       leading: const Icon(
-                                        Icons.air,
+                                        LineIcons.highTemperature,
                                         color: Colors.blue,
                                       ),
                                       title: Text(
@@ -161,34 +172,35 @@ class _SearchedScreenState extends State<SearchedScreen> {
                                     ),
                                     ListTile(
                                       leading: const Icon(
-                                        Icons.air,
+                                        LineIcons.draftingCompass,
                                         color: Colors.blue,
                                       ),
                                       title: Text(
                                           'Humidity: ${weatherModel.main!.humidity}%'),
                                     ),
-                                    const ListTile(
-                                      leading: Icon(
-                                        Icons.air,
-                                        color: Colors.blue,
-                                      ),
-                                      title: Text('Air Quality Index  AQI'),
-                                    ),
                                     ListTile(
                                       leading: const Icon(
-                                        Icons.air,
+                                        LineIcons.lowVision,
                                         color: Colors.blue,
                                       ),
                                       title: Text(
-                                          'Pressure ${weatherModel.main!.pressure}hpa'),
+                                          'Visibility: ${weatherModel.visibility}'),
                                     ),
                                     ListTile(
                                       leading: const Icon(
-                                        Icons.air,
+                                        LineIcons.prescriptionBottle,
                                         color: Colors.blue,
                                       ),
                                       title: Text(
-                                          'Clouds Covered ${weatherModel.clouds!.all}%'),
+                                          'Pressure: ${weatherModel.main!.pressure}hpa'),
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(
+                                        LineIcons.cloud,
+                                        color: Colors.blue,
+                                      ),
+                                      title: Text(
+                                          'Clouds Covered: ${weatherModel.clouds!.all}%'),
                                     )
                                   ],
                                 ),
@@ -198,10 +210,10 @@ class _SearchedScreenState extends State<SearchedScreen> {
                         );
                       },
                       error: (error) {
-                        return const Center(
+                        return Center(
                             child: Text(
-                          "No place Found try sraeching another",
-                          style: TextStyle(fontSize: 18),
+                          "No place Found for ${widget.searchTerm}",
+                          style: const TextStyle(fontSize: 18),
                         ));
                       },
                     );

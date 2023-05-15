@@ -1,8 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/core/constants/constants.dart';
-import 'package:weather_app/router/router.gr.dart';
-import 'package:weather_app/weather/presentation/screens/weather_home_screen.dart';
+import 'package:weather_app/core/router/router.gr.dart';
 
 @RoutePage()
 class SplashScreen extends StatefulWidget {
@@ -15,14 +14,11 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    super.initState();
+
     Future.delayed(const Duration(seconds: 3), () {
       context.router.push(const WeatherHomeRoute());
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const WeatherHomeScreen()),
-      // );
     });
-    super.initState();
   }
 
   @override

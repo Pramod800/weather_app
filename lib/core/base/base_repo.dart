@@ -16,7 +16,7 @@ class BaseRepository {
   }) async {
     try {
       final data = await call;
-      // print('error in repo');
+
       return right(await onSuccess(data));
     } on String catch (e) {
       print('erorrrrrrrrrrrrrrrrrr');

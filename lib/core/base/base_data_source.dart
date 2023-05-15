@@ -23,7 +23,6 @@ class BaseRemoteSource {
     try {
       final response = await request(dioClient);
       if (response.statusCode! == 200) {
-        print(response.data);
         return await onResponse(response.data!);
       } else {
         throw 'UnExpected Error Occurred!!!';
