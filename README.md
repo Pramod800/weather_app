@@ -5,6 +5,9 @@ Features:
  1. User location data using latitude and longitude
  
  2. Search weather data of different location using city name
+
+Packages Used:
+   -- bloc, auto_route, dio, freezed, dartz, geolocator, 
  
  Screenshots:
  
