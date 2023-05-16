@@ -1,17 +1,24 @@
-# weather_app
+API: OpenWeather API
 
-A new Flutter project.
+Features:
 
-## Getting Started
+ 1. User location data using latitude and longitude
+ 
+ 2. Search weather data of different location using city name
 
-This project is a starting point for a Flutter application.
+Packages Used:
+   -- bloc, auto_route, dio, freezed, dartz, geolocator, 
+ 
+ Screenshots:
+ 
+ Splash Screen
+![Screenshot_2023-05-16-23-31-23-176_com example weather_app](https://github.com/Pramod800/weather_app/assets/61006645/a5fa0628-20ea-40d8-b874-c3ff4c4ec091)
 
-A few resources to get you started if this is your first Flutter project:
+Permission Screen
+![Screenshot_2023-05-16-23-32-29-791_com google android permissioncontroller](https://github.com/Pramod800/weather_app/assets/61006645/5b1716b6-970d-4fe6-824b-5a3652fff220)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Current user location data
+![Screenshot_2023-05-16-23-32-40-393_com example weather_app](https://github.com/Pramod800/weather_app/assets/61006645/2080a727-de7e-43f0-b40e-2384006adf7a)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# weather_app
+Searched Screen
+![Screenshot_2023-05-16-23-32-49-594_com example weather_app](https://github.com/Pramod800/weather_app/assets/61006645/54a16b12-246b-47c9-a1f4-c2267e3f1b53)
