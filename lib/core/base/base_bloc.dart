@@ -11,7 +11,7 @@ mixin BaseBlocMixin {
         return onData(data);
       });
     } on String catch (e) {
-      return onFailure( e.toString());
+      return onFailure(e.toString());
     }
   }
 }

@@ -2,10 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:weather_app/core/constants/constants.dart';
 import 'package:weather_app/core/router/router.gr.dart';
-import 'package:weather_app/weather/presentation/cubit/current_weather_cubit.dart';
+import 'package:weather_app/weather/presentation/bloc/user_location_cubit/current_weather_cubit.dart';
 
 @RoutePage()
 class WeatherHomeScreen extends StatefulWidget {
@@ -27,21 +27,8 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
   @override
   void dispose() {
     super.dispose();
-
     _searchController.dispose();
   }
-
-  // getCurrentLocation() async {
-  //   var p = await Geolocator.getCurrentPosition(
-  //     desiredAccuracy: LocationAccuracy.low,
-  //     forceAndroidLocationManager: true,
-  //   );
-  //   if (p != null) {
-  //     print('Lat:${p.latitude}, Long:${p.longitude}');
-  //   } else {
-  //     print('Data unavailable');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -68,22 +55,32 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                         color: Colors.blue,
                       ));
                     }, fetched: (weatherModel) {
-                      print(weatherModel);
+                      /// convert default Fahrenheit temperature value to celsius [Fahrenheit to celsius]
+                      final tempData =
+                          weatherModel.main!.temp!.round() - 273.15.round();
                       return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 10),
-                          // Padding(
-                          //   padding:  EdgeInsets.only(left: 22),
-                          //   child: Image.asset(
-                          //     'assets/images/bannerr.png',
-                          //     height: 65,
-                          //     width: 220,
-                          //     scale: 1.3,
-                          //     fit: BoxFit.cover,
-                          //   ),
-                          // ),
-                          const SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Image.asset(
+                                'assets/images/weee.png',
+                                height: 65,
+                                width: 100,
+                                scale: 1.3,
+                                fit: BoxFit.fill,
+                              ),
+                              const Text(
+                                'Weather App',
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 15),
 
                           /// topheader [search bar/header ]
                           Row(
@@ -133,11 +130,31 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                             ],
                           ),
                           const SizedBox(height: 20),
-                          Image.network(
-                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEwR73lnZrAZJ1L6DcFLICg-I9HcNHzrG0dp9IZfE&s',
-                            scale: 1.2,
-                            height: 80,
-                            width: 80,
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: weatherModel.weather!.length,
+                            itemBuilder: (context, index) {
+                              final data = weatherModel.weather![index];
+
+                              return Column(
+                                children: [
+                                  Image.network(
+                                      "http://openweathermap.org/img/w/${data.icon}.png"
+                                          .toString(),
+                                      height: 100,
+                                      width: 100,
+                                      fit: BoxFit.fill
+
+                                      // scale: 0.5,
+                                      ),
+                                  Text(
+                                    data.description.toString(),
+                                    style: const TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                           const SizedBox(height: 15),
 
@@ -156,14 +173,15 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(weatherModel.main!.temp.toString(),
+                              Text('${tempData.toString()} °C',
                                   style: const TextStyle(
                                       fontSize: 42,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.green)),
                               const SizedBox(width: 10),
-                              const Text('Feels Like 30°C',
-                                  style: TextStyle(
+                              Text(
+                                  'Feels Like:${weatherModel.main!.tempMax ?? "N/A"}°C ',
+                                  style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w400,
                                       color: Colors.grey)),
@@ -173,43 +191,43 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                           const SizedBox(height: 20),
 
                           ///werather forecastlistview [weather forecast]
-                          SizedBox(
-                            height: 70,
-                            child: ListView.builder(
-                              physics: const BouncingScrollPhysics(),
-                              itemCount: 15,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (BuildContext context, index) {
-                                return Container(
-                                  margin: index == 0
-                                      ? const EdgeInsets.only(left: 0)
-                                      : null,
-                                  child: Card(
-                                    color: Colors.white70,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 10),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const [
-                                          Text(
-                                            '7 March',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(height: 10),
-                                          Text('20°C'),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 10),
+                          // SizedBox(
+                          //   height: 70,
+                          //   child: ListView.builder(
+                          //     physics: const BouncingScrollPhysics(),
+                          //     itemCount: 15,
+                          //     scrollDirection: Axis.horizontal,
+                          //     itemBuilder: (BuildContext context, index) {
+                          //       return Container(
+                          //         margin: index == 0
+                          //             ? const EdgeInsets.only(left: 0)
+                          //             : null,
+                          //         child: Card(
+                          //           color: Colors.white70,
+                          //           child: Container(
+                          //             padding: const EdgeInsets.symmetric(
+                          //                 horizontal: 15, vertical: 10),
+                          //             child: Column(
+                          //               mainAxisAlignment:
+                          //                   MainAxisAlignment.center,
+                          //               children: const [
+                          //                 Text(
+                          //                   '7 March',
+                          //                   style: TextStyle(
+                          //                       fontSize: 14,
+                          //                       fontWeight: FontWeight.bold),
+                          //                 ),
+                          //                 SizedBox(height: 10),
+                          //                 Text('20°C'),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
+                          // const SizedBox(height: 10),
 
                           /// wind part [wind part]
                           Column(
@@ -233,13 +251,14 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: const [
+                                    children: [
                                       ListTile(
-                                        leading: Icon(
+                                        leading: const Icon(
                                           Icons.air,
                                           color: Colors.blue,
                                         ),
-                                        title: Text('40 Speed Km/h'),
+                                        title: Text(
+                                            '${weatherModel.wind!.speed.toString()} Speed Km/hr'),
                                       )
                                     ],
                                   ),
@@ -271,28 +290,46 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: const [
+                                    children: [
                                       ListTile(
-                                        leading: Icon(
-                                          Icons.air,
+                                        leading: const Icon(
+                                          LineIcons.highTemperature,
                                           color: Colors.blue,
                                         ),
-                                        title: Text('Temperature 20°C 🔥'),
+                                        title: Text(
+                                            'Temperature: ${tempData.toString()} °C'),
                                       ),
                                       ListTile(
-                                        leading: Icon(
-                                          Icons.air,
+                                        leading: const Icon(
+                                          LineIcons.draftingCompass,
                                           color: Colors.blue,
                                         ),
-                                        title:
-                                            Text('Air Quality Index 200 AQI'),
+                                        title: Text(
+                                            'Humidity: ${weatherModel.main!.humidity}%'),
                                       ),
                                       ListTile(
-                                        leading: Icon(
-                                          Icons.air,
+                                        leading: const Icon(
+                                          LineIcons.lowVision,
                                           color: Colors.blue,
                                         ),
-                                        title: Text('Pressure 1000.ohpa'),
+                                        title: Text(
+                                            'Visibility: ${weatherModel.visibility}'),
+                                      ),
+                                      ListTile(
+                                        leading: const Icon(
+                                          Icons.push_pin,
+                                          color: Colors.blue,
+                                        ),
+                                        title: Text(
+                                            'Pressure: ${weatherModel.main!.pressure} hpa'),
+                                      ),
+                                      ListTile(
+                                        leading: const Icon(
+                                          LineIcons.cloud,
+                                          color: Colors.blue,
+                                        ),
+                                        title: Text(
+                                            'Clouds Covered: ${weatherModel.clouds!.all}%'),
                                       )
                                     ],
                                   ),

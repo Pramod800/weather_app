@@ -15,18 +15,19 @@ class CurrentWeatherCubit extends Cubit<CurrentWeatherState>
 
   void getWeatherFromLatLng() {
     emit(const CurrentWeatherState.loading());
-    _weatherRepo.getCurrentLocation().then((userLocation) async {
-      // print(userLocation);
-      return handleBlocData(
-          response: await _weatherRepo.getWeatherFromLatLng(
-              lat: userLocation.latitude, long: userLocation.longitude),
-          onData: (data) {
-            emit(CurrentWeatherState.fetched(weatherModel: data));
-          },
-          onFailure: (error) {
-          
-            emit(CurrentWeatherState.error(error.toString()));
-          });
-    });
+
+    _weatherRepo.getCurrentLocation().then(
+      (userLocation) async {
+        return handleBlocData(
+            response: await _weatherRepo.getWeatherFromLatLng(
+                lat: userLocation.latitude, long: userLocation.longitude),
+            onData: (data) {
+              emit(CurrentWeatherState.fetched(weatherModel: data));
+            },
+            onFailure: (error) {
+              emit(CurrentWeatherState.error(error.toString()));
+            });
+      },
+    );
   }
 }

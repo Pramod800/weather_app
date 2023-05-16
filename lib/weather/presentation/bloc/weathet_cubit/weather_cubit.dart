@@ -16,25 +16,23 @@ class WeatherCubit extends Cubit<WeatherState> with BaseBlocMixin {
 
   void getWeatherDetails({required String city}) async {
     emit(const WeatherState.loading());
+    final data = await _weatherRepo.getWeatherDetails(city: city);
+    data.fold(
+      (error) => emit(WeatherState.error(error.toString())),
+      (fetchedData) => emit(
+        WeatherState.fetched(weatherModel: fetchedData),
+      ),
+    );
 
-    // final data = await _weatherRepo.getWeatherDetails(city: city);
-
-    // data.fold(
-    //   (error) => emit(WeatherState.error(error.toString())),
-    //   (fetchedData) => emit(
-    //     WeatherState.fetched(weatherModel: fetchedData),
-    //   ),
-    // );
-
-      handleBlocData(
-        response: await _weatherRepo.getWeatherDetails(city: city),
-        onData: (data) {
-          emit(WeatherState.fetched(weatherModel: data));
-        },
-        onFailure: (error) {
-            print("ERROR==> $error");
-          emit(WeatherState.error(error.toString()));
-        });
+    // handleBlocData(
+    //   response: await _weatherRepo.getWeatherDetails(city: city),
+    //   onData: (data) {
+    //     emit(WeatherState.fetched(weatherModel: data));
+    //   },
+    //   onFailure: (error) {
+    //       print("ERROR==> $error");
+    //     emit(WeatherState.error(error.toString()));
+    //   });
   }
 //  void getWeatherFromLatLng()async{
 

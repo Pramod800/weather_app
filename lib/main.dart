@@ -5,14 +5,13 @@ import 'package:weather_app/core/router/router.dart';
 import 'package:weather_app/weather/data/movie_data_source/weather_data_source.dart';
 import 'package:weather_app/weather/data/repository/weather_repo_impl.dart';
 import 'package:weather_app/weather/domain/location_service.dart';
-import 'package:weather_app/weather/presentation/bloc/cubit/weather_cubit.dart';
-import 'package:weather_app/weather/presentation/cubit/current_weather_cubit.dart';
+import 'package:weather_app/weather/presentation/bloc/user_location_cubit/current_weather_cubit.dart';
+import 'package:weather_app/weather/presentation/bloc/weathet_cubit/weather_cubit.dart';
 
 void main() async {
   // configureDependencies();
   WidgetsFlutterBinding.ensureInitialized();
-  final location = await UserLocationService.determinePosition();
-  print("CURRENT LOCATION ${location.latitude}");
+  // final location = await UserLocationService.determinePosition();
   runApp(MyApp());
 }
 
