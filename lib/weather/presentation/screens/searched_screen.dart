@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:weather_app/core/constants/constants.dart';
@@ -49,7 +50,7 @@ class _SearchedScreenState extends State<SearchedScreen> {
           ),
           body: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+              padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 15.w),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -70,8 +71,9 @@ class _SearchedScreenState extends State<SearchedScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(widget.searchTerm.toUpperCase(),
-                                      style: const TextStyle(
-                                          fontSize: 35, color: Colors.orange)),
+                                      style: TextStyle(
+                                          fontSize: 35.sp,
+                                          color: Colors.orange)),
                                 ],
                               ),
                               // const SizedBox(height: 15),
@@ -85,16 +87,17 @@ class _SearchedScreenState extends State<SearchedScreen> {
                                       Image.network(
                                           "http://openweathermap.org/img/w/${data.icon}.png"
                                               .toString(),
-                                          height: 100,
-                                          width: 100,
+                                          height: 100.h,
+                                          width: 100.w,
                                           fit: BoxFit.fill
 
                                           // scale: 0.5,
                                           ),
                                       Text(
                                         data.description.toString(),
-                                        style: const TextStyle(
-                                            fontSize: 20, color: Colors.black),
+                                        style: TextStyle(
+                                            fontSize: 20.sp,
+                                            color: Colors.black),
                                       ),
                                     ],
                                   );
@@ -105,31 +108,28 @@ class _SearchedScreenState extends State<SearchedScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text("${weatherModel.main!.temp!.round()}°C",
-                                      style: const TextStyle(
-                                          fontSize: 42,
+                                      style: TextStyle(
+                                          fontSize: 42.sp,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.green)),
-                                  const SizedBox(width: 10),
+                                  SizedBox(width: 10.w),
                                   Text(
                                     "Max Temp ${weatherModel.main!.tempMin ?? 'N/A'}°C",
-                                    style: const TextStyle(
-                                        fontSize: 20,
+                                    style: TextStyle(
+                                        fontSize: 20.sp,
                                         fontWeight: FontWeight.w400,
                                         color: Colors.grey),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 15),
+                              SizedBox(height: 10.h),
 
-                              const Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text('Wind',
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.blue)),
-                              ),
+                              Text('Wind',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      fontSize: 24.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.blue)),
                               Card(
                                 color: Colors.white70,
                                 elevation: 0,
@@ -153,15 +153,12 @@ class _SearchedScreenState extends State<SearchedScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 15),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text('Barometer',
-                                    style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.blue)),
-                              ),
+                              SizedBox(height: 10.h),
+                              Text('Barometer',
+                                  style: TextStyle(
+                                      fontSize: 25.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.blue)),
                               Card(
                                 color: Colors.white70,
                                 elevation: 0,
@@ -224,7 +221,7 @@ class _SearchedScreenState extends State<SearchedScreen> {
                           return Center(
                               child: Text(
                             "No place Found for ${widget.searchTerm}",
-                            style: const TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 18.sp),
                           ));
                         },
                       );

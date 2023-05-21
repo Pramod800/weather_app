@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:weather_app/core/constants/constants.dart';
@@ -17,6 +18,7 @@ class WeatherHomeScreen extends StatefulWidget {
 
 class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
   final TextEditingController _searchController = TextEditingController();
+  // var _loading = false;
 
   @override
   void initState() {
@@ -29,6 +31,12 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
     super.dispose();
     _searchController.dispose();
   }
+
+  // void _refresh() async {
+  //   setState(() => _loading = true);
+  //   context.read<CurrentWeatherCubit>().getWeatherFromLatLng();
+  //   if (mounted) setState(() => _loading = false);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -61,33 +69,43 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                           Row(
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Image.asset(
                                 'assets/images/weee.png',
-                                height: 65,
-                                width: 100,
+                                height: 65.h,
+                                width: 100.w,
                                 scale: 1.3,
                                 fit: BoxFit.fill,
                               ),
-                              const Text(
+                              Text(
                                 'Weather App',
                                 style: TextStyle(
-                                    fontSize: 22,
+                                    fontSize: 22.sp,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
-                              )
+                              ),
+                              // Align(
+                              //   alignment: Alignment.topRight,
+                              //   child: IconButton(
+                              //     padding: const EdgeInsets.all(12),
+                              //     iconSize: 26,
+                              //     onPressed: () {},
+                              //     icon: const Icon(Icons.refresh,
+                              //         color: Colors.green),
+                              //   ),
+                              // ),
                             ],
                           ),
-                          const SizedBox(height: 15),
+                          SizedBox(height: 15.h),
 
                           /// topheader [search bar/header ]
                           Row(
                             children: [
                               Expanded(
-                                child: 
-                                TextFormField(
+                                child: TextFormField(
                                   controller: _searchController,
                                   onFieldSubmitted: (value) {
                                     if (value.isNotEmpty) {
@@ -114,23 +132,9 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 10),
-                              // Container(
-                              //   decoration: BoxDecoration(
-                              //     borderRadius: BorderRadius.circular(15),
-                              //     color: Colors.white,
-                              //   ),
-                              //   child: IconButton(
-                              //     padding: const EdgeInsets.all(12),
-                              //     iconSize: 26,
-                              //     onPressed: () {},
-                              //     icon: const Icon(Icons.location_on_outlined,
-                              //         color: Colors.green),
-                              //   ),
-                              // ),
                             ],
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 10.h),
                           ListView.builder(
                             shrinkWrap: true,
                             itemCount: weatherModel.weather!.length,
@@ -142,30 +146,30 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                                   Image.network(
                                       "http://openweathermap.org/img/w/${data.icon}.png"
                                           .toString(),
-                                      height: 100,
-                                      width: 100,
+                                      height: 100.h,
+                                      width: 100.w,
                                       fit: BoxFit.fill
 
                                       // scale: 0.5,
                                       ),
                                   Text(
                                     data.description.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 20, color: Colors.black),
+                                    style: TextStyle(
+                                        fontSize: 20.sp, color: Colors.black),
                                   ),
                                 ],
                               );
                             },
                           ),
-                          const SizedBox(height: 15),
+                          SizedBox(height: 10.h),
 
                           /// city info part [city info]
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(weatherModel.name.toString(),
-                                  style: const TextStyle(
-                                      fontSize: 30,
+                                  style: TextStyle(
+                                      fontSize: 30.sp,
                                       fontWeight: FontWeight.w400,
                                       color: Colors.orange)),
                             ],
@@ -175,21 +179,21 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text('${tempData.toString()} °C',
-                                  style: const TextStyle(
-                                      fontSize: 42,
+                                  style: TextStyle(
+                                      fontSize: 42.sp,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.green)),
-                              const SizedBox(width: 10),
+                              SizedBox(width: 10.w),
                               Text(
                                   'Feels Like:${weatherModel.main!.tempMax ?? "N/A"}°C ',
-                                  style: const TextStyle(
-                                      fontSize: 20,
+                                  style: TextStyle(
+                                      fontSize: 20.sp,
                                       fontWeight: FontWeight.w400,
                                       color: Colors.grey)),
                             ],
                           ),
 
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20.h),
 
                           ///werather forecastlistview [weather forecast]
                           // SizedBox(
@@ -234,17 +238,17 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.only(left: 10),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
                                 child: Text('Wind',
                                     style: TextStyle(
-                                        fontSize: 24,
+                                        fontSize: 24.sp,
                                         fontWeight: FontWeight.w500,
                                         color: Colors.lightBlue)),
                               ),
                               Card(
                                 color: Colors.white70,
-                                elevation: 0,
+                                // elevation: 0,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(11)),
                                 child: SizedBox(
@@ -267,7 +271,7 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
 
                           /// barometer last section [barometer]
                           Column(
