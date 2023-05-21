@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:weather_app/core/constants/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -30,8 +31,10 @@ class _SearchedScreenState extends State<SearchedScreen> {
       listener: (context, state) {
         state.maybeWhen(
             orElse: () {},
-            error: (error) => ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(error))));
+            error: (error) => Fluttertoast.showToast(
+                msg: 'Not Found: $error',
+                backgroundColor: Colors.blue,
+                gravity: ToastGravity.BOTTOM));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -42,7 +45,6 @@ class _SearchedScreenState extends State<SearchedScreen> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            // title: Text(widget.searchTerm.toUpperCase()),
             backgroundColor: Colors.transparent,
           ),
           body: SafeArea(
