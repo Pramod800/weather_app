@@ -86,7 +86,8 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                           Row(
                             children: [
                               Expanded(
-                                child: TextFormField(
+                                child: 
+                                TextFormField(
                                   controller: _searchController,
                                   onFieldSubmitted: (value) {
                                     if (value.isNotEmpty) {
