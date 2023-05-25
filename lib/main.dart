@@ -42,7 +42,6 @@ class MyApp extends StatelessWidget {
             title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
             routerConfig: _appRouter.config(),
-
             theme: ThemeData(
                 primarySwatch: Colors.blue, primaryColor: Colors.transparent),
             // home: const SplashScreen(),

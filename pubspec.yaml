@@ -80,6 +80,7 @@ flutter:
   assets:
     - assets/images/weather.png
     - assets/images/weee.png
+    - assets/images/not_found.png
 
 
   #   - images/a_dot_ham.jpeg

@@ -219,9 +219,11 @@ class _SearchedScreenState extends State<SearchedScreen> {
                         },
                         error: (error) {
                           return Center(
-                              child: Text(
-                            "No place Found for ${widget.searchTerm}",
-                            style: TextStyle(fontSize: 18.sp),
+                              child: Image.asset(
+                            'assets/images/not_found.png',
+                            fit: BoxFit.cover,
+                            // height: 300,
+                            // width: 250,
                           ));
                         },
                       );
