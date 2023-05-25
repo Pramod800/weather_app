@@ -66,8 +66,13 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                       /// convert default Fahrenheit temperature value to celsius [Fahrenheit to celsius]
                       final tempData =
                           weatherModel.main!.temp!.round() - 273.15.round();
+                      final maxTemp =
+                          weatherModel.main!.tempMax!.round() - 273.15.round();
+
+                      final feelsLike = weatherModel.main!.feelsLike!.round() -
+                          273.15.round();
                       return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(height: 10.h),
                           Row(
@@ -184,13 +189,17 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                                       fontWeight: FontWeight.w500,
                                       color: Colors.green)),
                               SizedBox(width: 10.w),
-                              Text(
-                                  'Feels Like:${weatherModel.main!.tempMax ?? "N/A"}°C ',
+                              Text('Feels Like:$feelsLike°C ',
                                   style: TextStyle(
                                       fontSize: 20.sp,
                                       fontWeight: FontWeight.w400,
                                       color: Colors.grey)),
                             ],
+                          ),
+
+                          Text(
+                            'Max Temperature $maxTemp',
+                            style: const TextStyle(fontSize: 18),
                           ),
 
                           SizedBox(height: 20.h),

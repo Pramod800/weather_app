@@ -72,9 +72,9 @@ Map<String, dynamic> _$$_CoordToJson(_$_Coord instance) => <String, dynamic>{
 
 _$_Main _$$_MainFromJson(Map<String, dynamic> json) => _$_Main(
       temp: (json['temp'] as num?)?.toDouble(),
-      feelsLike: (json['feelsLike'] as num?)?.toDouble(),
-      tempMin: (json['tempMin'] as num?)?.toDouble(),
-      tempMax: (json['tempMax'] as num?)?.toDouble(),
+      feelsLike: (json['feels_like'] as num?)?.toDouble(),
+      tempMin: (json['temp_min'] as num?)?.toDouble(),
+      tempMax: (json['temp_max'] as num?)?.toDouble(),
       pressure: json['pressure'] as int?,
       humidity: json['humidity'] as int?,
       seaLevel: json['seaLevel'] as int?,
@@ -83,9 +83,9 @@ _$_Main _$$_MainFromJson(Map<String, dynamic> json) => _$_Main(
 
 Map<String, dynamic> _$$_MainToJson(_$_Main instance) => <String, dynamic>{
       'temp': instance.temp,
-      'feelsLike': instance.feelsLike,
-      'tempMin': instance.tempMin,
-      'tempMax': instance.tempMax,
+      'feels_like': instance.feelsLike,
+      'temp_min': instance.tempMin,
+      'temp_max': instance.tempMax,
       'pressure': instance.pressure,
       'humidity': instance.humidity,
       'seaLevel': instance.seaLevel,
