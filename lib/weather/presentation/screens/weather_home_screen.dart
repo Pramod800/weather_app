@@ -18,11 +18,10 @@ class WeatherHomeScreen extends StatefulWidget {
 
 class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
   final TextEditingController _searchController = TextEditingController();
-  // var _loading = false;
 
   @override
   void initState() {
-    context.read<CurrentWeatherCubit>().getWeatherFromLatLng();
+    context.read<CurrentWeatherCubit>().startFetchingLocation();
     super.initState();
   }
 
@@ -31,12 +30,6 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
     super.dispose();
     _searchController.dispose();
   }
-
-  // void _refresh() async {
-  //   setState(() => _loading = true);
-  //   context.read<CurrentWeatherCubit>().getWeatherFromLatLng();
-  //   if (mounted) setState(() => _loading = false);
-  // }
 
   @override
   Widget build(BuildContext context) {

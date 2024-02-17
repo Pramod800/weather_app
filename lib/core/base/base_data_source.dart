@@ -4,9 +4,9 @@ import 'package:dio/dio.dart';
 
 /// [BaseRemoteSource] for handling network requests for dio client
 class BaseRemoteSource {
-  BaseRemoteSource();
+  // BaseRemoteSource();
 
-  final dioClient = Dio();
+  final  dioClient = Dio();
 
   /// [T] is return type from network request
   ///

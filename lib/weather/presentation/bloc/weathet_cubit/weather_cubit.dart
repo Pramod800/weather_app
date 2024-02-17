@@ -14,6 +14,7 @@ class WeatherCubit extends Cubit<WeatherState> {
 
   void getWeatherDetails({required String city}) async {
     emit(const WeatherState.loading());
+
     final data = await _weatherRepo.getWeatherDetails(city: city);
     data.fold(
       (error) => emit(WeatherState.error(error.toString())),
