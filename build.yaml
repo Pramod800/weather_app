@@ -1,0 +1,22 @@
+targets:
+  $default:
+    builders:
+      freezed:
+        generate_for:
+          - lib/**/models/*.dart
+          - lib/**/cubit/*.dart
+      json_serializable:
+        generate_for:
+          - lib/**/models/*.dart
+      auto_route_generator:auto_route_generator:
+        generate_for:
+          include:
+            - lib/**/screens/*_screen.dart
+          # Pre-redesign screens that are no longer routed. Drop these two
+          # lines once the files are deleted.
+          exclude:
+            - lib/**/screens/splash_screen.dart
+            - lib/**/screens/searched_screen.dart
+      auto_route_generator:auto_router_generator:
+        generate_for:
+          - lib/core/router/router.dart

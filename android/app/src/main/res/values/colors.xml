@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The night sky the app opens on. -->
+    <color name="launch_background">#070B1F</color>
+</resources>

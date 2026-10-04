@@ -1,30 +1,13 @@
-import 'package:geolocator/geolocator.dart';
+typedef Coordinates = ({double latitude, double longitude});
 
-class UserLocationService {
-  static Future<Position> determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+abstract interface class LocationService {
+  /// The device's position, asking for permission when needed.
+  ///
+  /// Throws a `Failure` describing why the position is unavailable.
+  Future<Coordinates> currentCoordinates();
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    return position;
-  }
+  /// Opens the settings page where the user can fix [serviceDisabled]
+  /// (device location off) or a blocked permission. Returns false when the
+  /// platform has no such page.
+  Future<bool> openSettings({required bool serviceDisabled});
 }
