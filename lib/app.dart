@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/core/di/bootstrap.dart';
@@ -34,8 +35,23 @@ class _WeatherAppState extends State<WeatherApp> {
         title: WeatherApp.name,
         debugShowCheckedModeBanner: false,
         theme: _theme,
+        scrollBehavior: const AppScrollBehavior(),
         routerConfig: _router.config(),
       ),
     );
   }
+}
+
+/// Lets a mouse or trackpad drag scrollables, as touch does. Without this
+/// the sideways hourly forecast cannot be moved on web and desktop, where
+/// the wheel only scrolls the page up and down.
+class AppScrollBehavior extends MaterialScrollBehavior {
+  const AppScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    ...super.dragDevices,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+  };
 }

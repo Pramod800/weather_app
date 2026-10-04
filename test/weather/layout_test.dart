@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:weather_app/app.dart';
 import 'package:weather_app/core/utils/unit_system.dart';
 import 'package:weather_app/weather/domain/entities/place.dart';
 import 'package:weather_app/weather/domain/entities/sun_clock.dart';
@@ -136,4 +138,41 @@ void main() {
       });
     }
   }
+
+  testWidgets('the hourly forecast scrolls sideways with a mouse drag', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        scrollBehavior: const AppScrollBehavior(),
+        home: Scaffold(
+          body: HourlyForecastChart(
+            report: _report(),
+            units: UnitSystem.metric,
+          ),
+        ),
+      ),
+    );
+
+    final scrollable = tester.state<ScrollableState>(
+      find.descendant(
+        of: find.byType(HourlyForecastChart),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    expect(scrollable.position.maxScrollExtent, greaterThan(0));
+
+    await tester.drag(
+      find.byType(HourlyForecastChart),
+      const Offset(-150, 0),
+      kind: PointerDeviceKind.mouse,
+    );
+    await tester.pumpAndSettle();
+
+    expect(scrollable.position.pixels, greaterThan(100));
+  });
 }
