@@ -1,4 +1,4 @@
-# Nimbus
+# Mausam
 
 A weather app built with Flutter. It shows live conditions, an hour-by-hour
 and 10-day forecast, and air quality for your location or any city, and

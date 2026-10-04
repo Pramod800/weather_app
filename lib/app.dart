@@ -11,7 +11,7 @@ import 'package:weather_app/weather/presentation/theme/app_theme.dart';
 class WeatherApp extends StatefulWidget {
   const WeatherApp({super.key});
 
-  static const name = 'Nimbus';
+  static const name = 'Mausam';
 
   @override
   State<WeatherApp> createState() => _WeatherAppState();

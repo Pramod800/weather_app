@@ -105,7 +105,7 @@ class WeatherRemoteDataSource {
   /// Nominatim's usage policy asks apps to identify themselves; it turns
   /// away the default Dart client.
   static const _userAgent =
-      'NimbusWeather/2.0 (https://github.com/Pramod800/weather_app)';
+      'MausamWeather/2.0 (https://github.com/Pramod800/weather_app)';
 
   /// The city-level address of a position.
   Future<Map<String, dynamic>> reverseGeocode({
