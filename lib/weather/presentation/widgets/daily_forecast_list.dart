@@ -10,10 +10,20 @@ import 'package:weather_app/weather/presentation/widgets/weather_glyph.dart';
 /// One row per day. The bars share one scale, so a warmer day sits further
 /// right and a wider bar means a bigger swing between night and day.
 class DailyForecastList extends StatelessWidget {
-  const DailyForecastList({super.key, required this.days, required this.units});
+  const DailyForecastList({
+    super.key,
+    required this.days,
+    required this.units,
+    this.labelFor,
+    this.showRainChance = true,
+  });
 
   final List<DailyForecast> days;
   final UnitSystem units;
+
+  /// Names each row; by default "Today" and then weekdays.
+  final String Function(int index, DailyForecast day)? labelFor;
+  final bool showRainChance;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +37,10 @@ class DailyForecastList extends StatelessWidget {
           if (i > 0) const Divider(),
           _DayRow(
             day: day,
-            label: i == 0 ? 'Today' : DateFormat('EEE').format(day.date),
+            label:
+                labelFor?.call(i, day) ??
+                (i == 0 ? 'Today' : DateFormat('EEE').format(day.date)),
+            showRainChance: showRainChance,
             units: units,
             coldest: coldest,
             warmest: warmest,
@@ -42,6 +55,7 @@ class _DayRow extends StatelessWidget {
   const _DayRow({
     required this.day,
     required this.label,
+    required this.showRainChance,
     required this.units,
     required this.coldest,
     required this.warmest,
@@ -49,6 +63,7 @@ class _DayRow extends StatelessWidget {
 
   final DailyForecast day;
   final String label;
+  final bool showRainChance;
   final UnitSystem units;
   final double coldest;
   final double warmest;
@@ -60,7 +75,7 @@ class _DayRow extends StatelessWidget {
       fontFeatures: AppTheme.tabularFigures,
     );
     final chance = (day.precipitationChance * 100).round();
-    final showChance = chance >= 20;
+    final showChance = showRainChance && chance >= 20;
     final low = units.temperature(day.low);
     final high = units.temperature(day.high);
 

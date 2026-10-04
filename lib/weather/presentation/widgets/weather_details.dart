@@ -16,6 +16,8 @@ class WeatherDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final current = report.current;
     final airQuality = report.airQuality;
+    final today = report.daily.firstOrNull;
+    final uvIndex = today?.uvIndexMax;
 
     final cells = <Widget>[
       _Reading(
@@ -30,6 +32,16 @@ class WeatherDetails extends StatelessWidget {
         ),
       ),
       _Reading(label: 'Humidity', value: '${current.humidity}%'),
+      _Reading(
+        label: 'UV index',
+        value: uvIndex == null
+            ? 'No data'
+            : '${uvIndex.round()} ${_uvLevel(uvIndex)}',
+      ),
+      _Reading(
+        label: 'Rain today',
+        value: units.precipitation(today?.precipitationSum ?? 0),
+      ),
       _Reading(label: 'Visibility', value: units.distance(current.visibility)),
       _Reading(label: 'Pressure', value: units.pressure(current.pressure)),
       _Reading(label: 'Cloud cover', value: '${current.cloudiness}%'),
@@ -61,6 +73,15 @@ class WeatherDetails extends StatelessWidget {
     );
   }
 }
+
+/// The World Health Organization's exposure categories.
+String _uvLevel(double index) => switch (index.round()) {
+  <= 2 => 'Low',
+  <= 5 => 'Moderate',
+  <= 7 => 'High',
+  <= 10 => 'Very high',
+  _ => 'Extreme',
+};
 
 class _Reading extends StatelessWidget {
   const _Reading({required this.label, required this.value, this.trailing});

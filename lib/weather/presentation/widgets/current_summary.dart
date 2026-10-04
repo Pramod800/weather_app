@@ -75,10 +75,27 @@ class CurrentSummary extends StatelessWidget {
         Text(current.description, style: text.titleLarge),
         const SizedBox(height: 2),
         Text(
-          'Feels like ${units.temperature(current.feelsLike)}',
+          [
+            'Feels like ${units.temperature(current.feelsLike)}.',
+            ?_comparedWithYesterday(),
+          ].join(' '),
           style: text.bodyLarge?.copyWith(color: AppTheme.muted),
         ),
       ],
     );
+  }
+
+  /// How today's high sits against yesterday's, in the units on screen.
+  String? _comparedWithYesterday() {
+    final today = report.daily.firstOrNull;
+    final yesterday = report.yesterday;
+    if (today == null || yesterday == null) return null;
+
+    final difference =
+        units.temperatureValue(today.high) -
+        units.temperatureValue(yesterday.high);
+    if (difference == 0) return 'About as warm as yesterday.';
+    return '${difference.abs()}° '
+        '${difference > 0 ? 'warmer' : 'cooler'} than yesterday.';
   }
 }

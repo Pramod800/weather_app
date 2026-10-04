@@ -183,6 +183,60 @@ void main() {
     );
   });
 
+  blocTest<WeatherCubit, WeatherState>(
+    'a saved-place page shows a fresh cached report without refetching',
+    setUp: () {
+      when(
+        () => repo.cachedReport(_pokhara),
+      ).thenReturn(_report(_pokhara, isFromCache: true));
+    },
+    build: () => WeatherCubit(
+      repo: repo,
+      storage: storage,
+      remembersSelection: false,
+      // Five minutes after the cached report was fetched.
+      now: () => DateTime.utc(2026, 10, 4, 6, 5),
+    ),
+    act: (cubit) => cubit.selectPlace(_pokhara, refetchFresh: false),
+    expect: () => [
+      isA<WeatherState>()
+          .having((s) => s.report?.place, 'place', _pokhara)
+          .having((s) => s.isRefreshing, 'isRefreshing', isFalse),
+    ],
+    verify: (_) {
+      verifyNever(() => repo.fetchReport(any()));
+      expect(storage.readSelection(), isNull);
+    },
+  );
+
+  blocTest<WeatherCubit, WeatherState>(
+    'a saved-place page refetches once its cached report is stale',
+    setUp: () {
+      when(
+        () => repo.cachedReport(_pokhara),
+      ).thenReturn(_report(_pokhara, isFromCache: true));
+      when(
+        () => repo.fetchReport(_pokhara),
+      ).thenAnswer((_) async => right(_report(_pokhara)));
+    },
+    build: () => WeatherCubit(
+      repo: repo,
+      storage: storage,
+      remembersSelection: false,
+      now: () => DateTime.utc(2026, 10, 4, 7),
+    ),
+    act: (cubit) => cubit.selectPlace(_pokhara, refetchFresh: false),
+    skip: 1,
+    expect: () => [
+      isA<WeatherState>().having(
+        (s) => s.report?.isFromCache,
+        'isFromCache',
+        isFalse,
+      ),
+    ],
+    verify: (_) => expect(storage.readSelection(), isNull),
+  );
+
   group('SearchCubit', () {
     blocTest<SearchCubit, SearchState>(
       'searches once after typing pauses',

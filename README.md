@@ -1,16 +1,23 @@
 # Nimbus
 
-A weather app built with Flutter. It shows live conditions, a 24-hour and
-5-day forecast, and air quality for your location or any city, and keeps
-working from saved data when you are offline.
+A weather app built with Flutter. It shows live conditions, an hour-by-hour
+and 10-day forecast, and air quality for your location or any city, and
+keeps working from saved data when you are offline. No API key needed.
 
 Runs on Android, iOS and the web.
 
 ## Features
 
 - **Current weather** for the device's location or any searched place
-- **Next 24 hours** as a temperature curve with rain chances
-- **5-day forecast** with each day's range on a shared scale
+- **Next 24 hours**, hour by hour, as a temperature curve with rain chances
+- **10-day forecast** with each day's range on a shared scale
+- **How today compares with yesterday**, plus UV index and rain total
+- **This day in past years**: the same date over the last five years, from
+  the historical archive, with today set against the average
+- **Swipe between places**: your saved places are full pages next to the
+  main one, each under its own sky
+- **Around the world**: the search screen shows the weather right now in a
+  random set of cities, to open with a tap
 - **Sun path** showing sunrise, sunset and where the sun is now
 - **Air quality** index and fine-particle (PM2.5) level
 - **Place search** with suggestions as you type, saved places and recents
@@ -24,17 +31,10 @@ Runs on Android, iOS and the web.
 
 ## Getting started
 
-1. Get a free API key from [OpenWeather](https://openweathermap.org/api).
-2. Copy `env.example.json` to `env.json` and put your key in it.
-   `env.json` is git-ignored.
-3. Run the app:
-
-   ```sh
-   flutter pub get
-   flutter run --dart-define-from-file=env.json
-   ```
-
-   The VS Code launch configurations already pass the env file.
+```sh
+flutter pub get
+flutter run
+```
 
 After changing a model, cubit state or route, regenerate code:
 
@@ -55,10 +55,11 @@ lib/
     presentation/  cubits, screens, widgets, theme
 ```
 
-- **State**: `flutter_bloc` cubits. `WeatherCubit` owns the report on
-  screen, `SearchCubit` debounces place search, `SavedPlacesCubit` and
-  `SettingsCubit` persist user choices.
-- **Data**: `dio` talks to OpenWeather; raw responses are cached with
+- **State**: `flutter_bloc` cubits. Each page has its own `WeatherCubit`
+  and `HistoryCubit`; `SearchCubit` debounces place search, `ExploreCubit`
+  draws the world cities, and `SavedPlacesCubit` and `SettingsCubit`
+  persist user choices.
+- **Data**: `dio` talks to Open-Meteo; raw responses are cached with
   `shared_preferences` and mapped to UI-ready entities in one place
   (`weather_report_mapper.dart`).
 - **Errors**: every failure is a typed `Failure` returned through
@@ -72,11 +73,15 @@ lib/
 flutter test
 ```
 
-Covers the response mapping, unit conversion, sun position, all cubits,
-and layout checks that fail if any section overflows on a small phone or
-with large text.
+Covers the response mapping, unit conversion, sun position, the cubits,
+swiping through the pager, the search screen's world places, and layout checks that fail if any
+section overflows on a small phone or with large text.
 
 ## Data
 
-Weather, forecast, air quality and geocoding data come from
-[OpenWeather](https://openweathermap.org/).
+- Weather, air quality and place search by
+  [Open-Meteo](https://open-meteo.com/) (CC BY 4.0, free for
+  non-commercial use).
+- The name of your current location comes from
+  [OpenStreetMap Nominatim](https://nominatim.org/)
+  (© OpenStreetMap contributors).

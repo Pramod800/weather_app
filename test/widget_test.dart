@@ -56,24 +56,6 @@ void main() {
       expect(opened, isTrue);
       expect(find.text('Try again'), findsNothing);
     });
-
-    testWidgets('does not suggest searching when the API key is the problem', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        _host(
-          FailureView(
-            failure: const Failure(FailureType.missingApiKey),
-            onRetry: () {},
-            onSearch: () {},
-            onOpenSettings: () {},
-          ),
-        ),
-      );
-
-      expect(find.text('Try again'), findsOneWidget);
-      expect(find.text('Search for a place'), findsNothing);
-    });
   });
 
   group('DailyForecastList', () {

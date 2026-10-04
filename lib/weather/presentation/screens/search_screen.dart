@@ -5,12 +5,14 @@ import 'package:weather_app/core/di/bootstrap.dart';
 import 'package:weather_app/core/router/router.gr.dart';
 import 'package:weather_app/weather/domain/entities/place.dart';
 import 'package:weather_app/weather/domain/weather_repo.dart';
+import 'package:weather_app/weather/presentation/cubit/explore_cubit.dart';
 import 'package:weather_app/weather/presentation/cubit/saved_places_cubit.dart';
 import 'package:weather_app/weather/presentation/cubit/search_cubit.dart';
 import 'package:weather_app/weather/presentation/cubit/weather_cubit.dart';
 import 'package:weather_app/weather/presentation/theme/app_theme.dart';
 import 'package:weather_app/weather/presentation/theme/sky_palette.dart';
 import 'package:weather_app/weather/presentation/widgets/sky_background.dart';
+import 'package:weather_app/weather/presentation/widgets/world_places_section.dart';
 
 @RoutePage()
 class SearchScreen extends StatelessWidget {
@@ -18,8 +20,13 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => SearchCubit(getIt<WeatherRepo>()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => SearchCubit(getIt<WeatherRepo>())),
+        BlocProvider(
+          create: (_) => ExploreCubit(getIt<WeatherRepo>())..shuffle(),
+        ),
+      ],
       child: const _SearchView(),
     );
   }
@@ -210,6 +217,8 @@ class _SavedAndRecent extends StatelessWidget {
               style: text.bodyLarge?.copyWith(color: AppTheme.muted),
             ),
           ),
+        WorldPlacesSection(onSelect: onSelect),
+        const SizedBox(height: 24),
       ],
     );
   }

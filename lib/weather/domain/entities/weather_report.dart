@@ -12,6 +12,7 @@ class WeatherReport {
     required this.daily,
     required this.utcOffset,
     required this.fetchedAt,
+    this.yesterday,
     this.airQuality,
     this.isFromCache = false,
   });
@@ -19,9 +20,14 @@ class WeatherReport {
   final Place place;
   final CurrentWeather current;
 
-  /// The current reading followed by the next 24 hours in 3-hour steps.
+  /// The current reading followed by the next 24 hours, hour by hour.
   final List<HourlyForecast> hourly;
+
+  /// Today first, then the days ahead.
   final List<DailyForecast> daily;
+
+  /// What yesterday was like, for comparing with today.
+  final DailyForecast? yesterday;
   final AirQuality? airQuality;
   final Duration utcOffset;
   final DateTime fetchedAt;
@@ -104,6 +110,8 @@ class DailyForecast {
     required this.high,
     required this.condition,
     required this.precipitationChance,
+    this.precipitationSum = 0,
+    this.uvIndexMax,
   });
 
   /// Midnight of the day on the place's wall clock.
@@ -114,12 +122,19 @@ class DailyForecast {
 
   /// Highest chance across the day, 0 to 1.
   final double precipitationChance;
+
+  /// Rain and melted snow over the day, in millimetres.
+  final double precipitationSum;
+
+  /// Null when the forecast does not reach this day.
+  final double? uvIndexMax;
 }
 
 class AirQuality {
   const AirQuality({required this.index, required this.pm25});
 
-  /// OpenWeather air quality index, 1 (good) to 5 (very poor).
+  /// Five bands of the European Air Quality Index, 1 (good) to
+  /// 5 (very poor).
   final int index;
 
   /// Fine particulate matter, µg/m³.
@@ -132,4 +147,19 @@ class AirQuality {
     4 => 'Poor',
     _ => 'Very poor',
   };
+}
+
+/// The weather at a place right now, for lists of many places.
+class PlaceSnapshot {
+  const PlaceSnapshot({
+    required this.place,
+    required this.temperature,
+    required this.condition,
+    required this.isDay,
+  });
+
+  final Place place;
+  final double temperature;
+  final WeatherCondition condition;
+  final bool isDay;
 }

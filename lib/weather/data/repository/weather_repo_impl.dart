@@ -3,10 +3,7 @@ import 'package:weather_app/core/error/failure.dart';
 import 'package:weather_app/weather/data/data_source/local_storage.dart';
 import 'package:weather_app/weather/data/data_source/weather_remote_data_source.dart';
 import 'package:weather_app/weather/data/mappers/weather_report_mapper.dart';
-import 'package:weather_app/weather/data/models/air_quality_model.dart';
-import 'package:weather_app/weather/data/models/forecast_model.dart';
-import 'package:weather_app/weather/data/models/geo_location_model.dart';
-import 'package:weather_app/weather/data/models/weather_model.dart';
+import 'package:weather_app/weather/data/models/open_meteo_models.dart';
 import 'package:weather_app/weather/domain/entities/place.dart';
 import 'package:weather_app/weather/domain/entities/weather_report.dart';
 import 'package:weather_app/weather/domain/location_service.dart';
@@ -38,13 +35,16 @@ class WeatherRepoImpl implements WeatherRepo {
           .fetchAirQuality(latitude: lat, longitude: lon)
           .then<Map<String, dynamic>?>((data) => data)
           .onError<Failure>((_, _) => null);
-      final [weather, forecast] = await Future.wait([
-        _remote.fetchCurrentWeather(latitude: lat, longitude: lon),
-        _remote.fetchForecast(latitude: lat, longitude: lon),
-      ]);
+      final placeRequest = place.name.isEmpty
+          ? _named(place)
+          : Future.value(place);
+      final forecast = await _remote.fetchForecast(
+        latitude: lat,
+        longitude: lon,
+      );
+      place = await placeRequest;
 
       final raw = <String, dynamic>{
-        'weather': weather,
         'forecast': forecast,
         'air': await airRequest,
         'fetchedAt': _now().toUtc().toIso8601String(),
@@ -71,23 +71,89 @@ class WeatherRepoImpl implements WeatherRepo {
     }
   }
 
+  /// How many years back "this day in past years" reaches.
+  static const pastYears = 5;
+
+  @override
+  Future<Either<Failure, List<DailyForecast>>> fetchPastYears(
+    Place place,
+    DateTime date,
+  ) async {
+    final day = date.toIso8601String().substring(0, 10);
+    try {
+      // A past day never changes, so one fetch per place and day is enough.
+      final cached = _storage.readHistory(place.id);
+      final List<dynamic> responses;
+      if (cached != null && cached['date'] == day) {
+        responses = cached['days'] as List<dynamic>;
+      } else {
+        responses = await Future.wait([
+          for (var years = 1; years <= pastYears; years++)
+            _remote.fetchArchiveDay(
+              latitude: place.latitude,
+              longitude: place.longitude,
+              date: DateTime.utc(date.year - years, date.month, date.day),
+            ),
+        ]);
+        await _storage.writeHistory(place.id, {'date': day, 'days': responses});
+      }
+
+      return right([
+        for (final response in responses)
+          ?mapArchiveDay(
+            ForecastResponse.fromJson(response as Map<String, dynamic>),
+          ),
+      ]);
+    } on Failure catch (failure) {
+      return left(failure);
+    } on Object {
+      return left(const Failure(FailureType.server));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PlaceSnapshot>>> fetchSnapshots(
+    List<Place> places,
+  ) async {
+    if (places.isEmpty) return right(const []);
+    try {
+      final responses = await _remote.fetchCurrentForMany(
+        latitudes: [for (final place in places) place.latitude],
+        longitudes: [for (final place in places) place.longitude],
+      );
+      return right([
+        for (final (i, place) in places.indexed)
+          if (i < responses.length)
+            ?mapPlaceSnapshot(
+              place,
+              ForecastResponse.fromJson(responses[i] as Map<String, dynamic>),
+            ),
+      ]);
+    } on Failure catch (failure) {
+      return left(failure);
+    } on Object {
+      return left(const Failure(FailureType.server));
+    }
+  }
+
   @override
   Future<Either<Failure, List<Place>>> searchPlaces(String query) async {
     try {
-      final results = await _remote.searchPlaces(query);
+      final response = GeocodingResponse.fromJson(
+        await _remote.searchPlaces(query),
+      );
       final places = <Place>[];
-      for (final item in results) {
-        final model = GeoLocationModel.fromJson(item as Map<String, dynamic>);
-        final name = model.name;
-        final lat = model.lat;
-        final lon = model.lon;
+      for (final result in response.results) {
+        final name = result.name;
+        final lat = result.latitude;
+        final lon = result.longitude;
         if (name == null || lat == null || lon == null) continue;
         final place = Place(
           name: name,
           latitude: lat,
           longitude: lon,
-          country: model.country,
-          state: model.state,
+          country: result.countryCode,
+          state: result.admin1,
         );
         // The geocoder returns near-duplicates for some cities.
         if (!places.contains(place)) places.add(place);
@@ -116,6 +182,39 @@ class WeatherRepoImpl implements WeatherRepo {
     }
   }
 
+  /// Looks up what the device's position is called. A weather report is
+  /// worth showing even when that lookup fails, so it never throws.
+  Future<Place> _named(Place place) async {
+    try {
+      final json = await _remote.reverseGeocode(
+        latitude: place.latitude,
+        longitude: place.longitude,
+      );
+      final address = json['address'] as Map<String, dynamic>? ?? const {};
+      final name =
+          address['city'] ??
+          address['town'] ??
+          address['village'] ??
+          address['municipality'] ??
+          address['county'] ??
+          json['name'];
+      if (name is! String || name.isEmpty) {
+        return place.copyWith(name: _unnamedPlace);
+      }
+      return Place(
+        name: name,
+        latitude: place.latitude,
+        longitude: place.longitude,
+        country: (address['country_code'] as String?)?.toUpperCase(),
+        state: address['state'] as String?,
+      );
+    } on Object {
+      return place.copyWith(name: _unnamedPlace);
+    }
+  }
+
+  static const _unnamedPlace = 'My location';
+
   WeatherReport _parse(
     Place place,
     Map<String, dynamic> raw, {
@@ -124,9 +223,10 @@ class WeatherRepoImpl implements WeatherRepo {
     final air = raw['air'] as Map<String, dynamic>?;
     return mapWeatherReport(
       place: place,
-      weather: WeatherModel.fromJson(raw['weather'] as Map<String, dynamic>),
-      forecast: ForecastModel.fromJson(raw['forecast'] as Map<String, dynamic>),
-      airQuality: air == null ? null : AirQualityModel.fromJson(air),
+      forecast: ForecastResponse.fromJson(
+        raw['forecast'] as Map<String, dynamic>,
+      ),
+      airQuality: air == null ? null : AirQualityResponse.fromJson(air),
       fetchedAt: DateTime.parse(raw['fetchedAt'] as String),
       isFromCache: isFromCache,
     );

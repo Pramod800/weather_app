@@ -11,6 +11,18 @@ abstract interface class WeatherRepo {
   /// The last report stored for [place], or null when there is none.
   WeatherReport? cachedReport(Place place);
 
+  /// What the weather was at [place] on the same calendar day as [date]
+  /// in each of the previous years, most recent first.
+  Future<Either<Failure, List<DailyForecast>>> fetchPastYears(
+    Place place,
+    DateTime date,
+  );
+
+  /// The current weather at each of [places], in one request.
+  Future<Either<Failure, List<PlaceSnapshot>>> fetchSnapshots(
+    List<Place> places,
+  );
+
   /// Places whose name matches [query].
   Future<Either<Failure, List<Place>>> searchPlaces(String query);
 

@@ -20,6 +20,12 @@ void main() {
       expect(UnitSystem.imperial.pressure(1016), '30.00 inHg');
     });
 
+    test('formats precipitation, with a bare zero for a dry day', () {
+      expect(UnitSystem.metric.precipitation(7.34), '7.3 mm');
+      expect(UnitSystem.metric.precipitation(0), '0 mm');
+      expect(UnitSystem.imperial.precipitation(25.4), '1.00 in');
+    });
+
     test('does not print a negative zero', () {
       expect(UnitSystem.metric.temperature(-0.2), '0°');
     });

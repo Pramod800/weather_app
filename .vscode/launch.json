@@ -7,22 +7,19 @@
         {
             "name": "weather_app",
             "request": "launch",
-            "type": "dart",
-            "toolArgs": ["--dart-define-from-file=env.json"]
+            "type": "dart"
         },
         {
             "name": "weather_app (profile mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile",
-            "toolArgs": ["--dart-define-from-file=env.json"]
+            "flutterMode": "profile"
         },
         {
             "name": "weather_app (release mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release",
-            "toolArgs": ["--dart-define-from-file=env.json"]
+            "flutterMode": "release"
         }
     ]
 }

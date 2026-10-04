@@ -10,8 +10,8 @@ enum UnitSystem {
   };
 
   String get summary => switch (this) {
-    metric => '°C, km/h, km, hPa',
-    imperial => '°F, mph, mi, inHg',
+    metric => '°C, km/h, km, mm, hPa',
+    imperial => '°F, mph, mi, in, inHg',
   };
 
   String get temperatureSymbol => switch (this) {
@@ -41,6 +41,15 @@ enum UnitSystem {
         : value.toStringAsFixed(1);
     return '$text $unit';
   }
+
+  String precipitation(double millimeters) => switch (this) {
+    metric => '${_trimmed(millimeters, 1)} mm',
+    imperial => '${_trimmed(millimeters / 25.4, 2)} in',
+  };
+
+  /// "0" rather than "0.0" for a dry day.
+  static String _trimmed(double value, int decimals) =>
+      value == 0 ? '0' : value.toStringAsFixed(decimals);
 
   String pressure(int hectopascals) => switch (this) {
     metric => '$hectopascals hPa',

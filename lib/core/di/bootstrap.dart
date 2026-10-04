@@ -1,6 +1,5 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:weather_app/core/config/env.dart';
 import 'package:weather_app/core/network/api_client.dart';
 import 'package:weather_app/weather/data/data_source/local_storage.dart';
 import 'package:weather_app/weather/data/data_source/weather_remote_data_source.dart';
@@ -17,11 +16,7 @@ Future<void> configureDependencies() async {
   getIt
     ..registerSingleton(LocalStorage(prefs))
     ..registerLazySingleton<LocationService>(GeolocatorLocationService.new)
-    ..registerLazySingleton(
-      () => WeatherRemoteDataSource(
-        createWeatherDio(apiKey: Env.openWeatherApiKey),
-      ),
-    )
+    ..registerLazySingleton(() => WeatherRemoteDataSource(createWeatherDio()))
     ..registerLazySingleton<WeatherRepo>(
       () =>
           WeatherRepoImpl(remote: getIt(), storage: getIt(), location: getIt()),

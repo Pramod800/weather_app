@@ -16,6 +16,7 @@ class LocalStorage {
 
   static const _reportPrefix = 'report.';
   static const _reportIndexKey = 'report_index';
+  static const _historyPrefix = 'history.';
   static const _savedKey = 'saved_places';
   static const _recentKey = 'recent_places';
   static const _selectionKey = 'selection';
@@ -43,6 +44,15 @@ class LocalStorage {
     }
     await _prefs.setStringList(_reportIndexKey, index);
   }
+
+  // History ----------------------------------------------------------------
+
+  /// One entry per place; a new day's history replaces the old one.
+  Map<String, dynamic>? readHistory(String placeId) =>
+      _readMap('$_historyPrefix$placeId');
+
+  Future<void> writeHistory(String placeId, Map<String, dynamic> raw) =>
+      _prefs.setString('$_historyPrefix$placeId', jsonEncode(raw));
 
   // Places -----------------------------------------------------------------
 

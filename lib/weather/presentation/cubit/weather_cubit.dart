@@ -13,9 +13,11 @@ class WeatherCubit extends Cubit<WeatherState> {
   WeatherCubit({
     required WeatherRepo repo,
     required LocalStorage storage,
+    bool remembersSelection = true,
     DateTime Function() now = DateTime.now,
   }) : _repo = repo,
        _storage = storage,
+       _remembersSelection = remembersSelection,
        _now = now,
        super(const WeatherState());
 
@@ -24,6 +26,10 @@ class WeatherCubit extends Cubit<WeatherState> {
 
   final WeatherRepo _repo;
   final LocalStorage _storage;
+
+  /// False for the pages of saved places, which must not replace what the
+  /// app reopens on.
+  final bool _remembersSelection;
   final DateTime Function() _now;
 
   /// Bumped on every load so a slow, superseded response is dropped.
@@ -69,9 +75,22 @@ class WeatherCubit extends Cubit<WeatherState> {
     );
   }
 
-  Future<void> selectPlace(Place place) async {
+  /// Shows [place]. With [refetchFresh] off, a cached report that is still
+  /// fresh is shown as is, without going to the network.
+  Future<void> selectPlace(Place place, {bool refetchFresh = true}) async {
     final request = ++_request;
     final cached = _repo.cachedReport(place);
+    if (!refetchFresh && cached != null && !_isStale(cached)) {
+      emit(
+        WeatherState(
+          status: WeatherStatus.success,
+          place: cached.place,
+          report: cached,
+          followsLocation: false,
+        ),
+      );
+      return;
+    }
     emit(
       WeatherState(
         status: cached == null ? WeatherStatus.loading : WeatherStatus.success,
@@ -81,7 +100,9 @@ class WeatherCubit extends Cubit<WeatherState> {
         followsLocation: false,
       ),
     );
-    await _storage.writeSelection(place, followsLocation: false);
+    if (_remembersSelection) {
+      await _storage.writeSelection(place, followsLocation: false);
+    }
     await _load(place, request, followsLocation: false);
   }
 
@@ -94,8 +115,11 @@ class WeatherCubit extends Cubit<WeatherState> {
   Future<void> refreshIfStale() async {
     final report = state.report;
     if (report == null || state.isRefreshing) return;
-    if (_now().difference(report.fetchedAt) > staleAfter) await refresh();
+    if (_isStale(report)) await refresh();
   }
+
+  bool _isStale(WeatherReport report) =>
+      _now().difference(report.fetchedAt) > staleAfter;
 
   Future<void> _load(
     Place place,
@@ -113,10 +137,12 @@ class WeatherCubit extends Cubit<WeatherState> {
           followsLocation: followsLocation,
         ),
       );
-      await _storage.writeSelection(
-        report.place,
-        followsLocation: followsLocation,
-      );
+      if (_remembersSelection) {
+        await _storage.writeSelection(
+          report.place,
+          followsLocation: followsLocation,
+        );
+      }
     });
   }
 

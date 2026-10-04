@@ -24,9 +24,6 @@ class FailureView extends StatelessWidget {
     final text = Theme.of(context).textTheme;
     // Browsers have no settings page the app can open.
     final canOpenSettings = failure.needsSettings && !kIsWeb;
-    final isConfigProblem =
-        failure.type == FailureType.missingApiKey ||
-        failure.type == FailureType.unauthorized;
 
     return Center(
       child: SingleChildScrollView(
@@ -63,11 +60,10 @@ class FailureView extends StatelessWidget {
                             : 'Try again',
                       ),
                     ),
-                  if (!isConfigProblem)
-                    TextButton(
-                      onPressed: onSearch,
-                      child: const Text('Search for a place'),
-                    ),
+                  TextButton(
+                    onPressed: onSearch,
+                    child: const Text('Search for a place'),
+                  ),
                 ],
               ),
             ],
@@ -81,8 +77,6 @@ class FailureView extends StatelessWidget {
     if (failure.isLocationProblem) return Icons.location_off_rounded;
     return switch (failure.type) {
       FailureType.network || FailureType.timeout => Icons.wifi_off_rounded,
-      FailureType.missingApiKey ||
-      FailureType.unauthorized => Icons.key_off_rounded,
       _ => Icons.cloud_off_rounded,
     };
   }
